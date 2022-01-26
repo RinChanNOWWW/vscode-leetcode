@@ -170,7 +170,12 @@ async function showProblemInternal(node: IProblem): Promise<void> {
         const descriptionConfig: IDescriptionConfiguration = settingUtils.getDescriptionConfiguration();
         const needTranslation: boolean = settingUtils.shouldUseEndpointTranslation();
 
-        await leetCodeExecutor.showProblem(node, language, finalPath, descriptionConfig.showInComment, needTranslation);
+        const header: string[] = leetCodeConfig.get<string[]>("header", []);
+        let header_str: string = header.join("\n").trim();
+        if (header_str.length > 0) {
+            header_str += "\n";
+        }
+        await leetCodeExecutor.showProblem(node, language, finalPath, descriptionConfig.showInComment, needTranslation, header_str);
         const promises: any[] = [
             vscode.window.showTextDocument(vscode.Uri.file(finalPath), { preview: false, viewColumn: vscode.ViewColumn.One }),
             promptHintMessage(
